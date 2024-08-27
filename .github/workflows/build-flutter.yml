@@ -20,28 +20,28 @@ jobs:
       - run: flutter test
 
       # Build for Android
-      - run: flutter build apk
+      # - run: flutter build apk
 
       # Build for macOS
-      - run: flutter build macos
+      # - run: flutter build macos
 
       # Build for Windows
       - run: flutter build windows
 
       # Build for Linux
-      - run: flutter build linux
+      # - run: flutter build linux
 
       # Upload APK as a build artifact
-      - uses: actions/upload-artifact@v2
-        with:
-          name: app-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: app-release-apk
+      #     path: build/app/outputs/flutter-apk/app-release.apk
 
       # Upload macOS app as a build artifact
-      - uses: actions/upload-artifact@v2
-        with:
-          name: macos-release-app
-          path: build/macos/Build/Products/Release/*.app
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: macos-release-app
+      #     path: build/macos/Build/Products/Release/*.app
 
       # Upload Windows app as a build artifact
       - uses: actions/upload-artifact@v2
@@ -50,7 +50,7 @@ jobs:
           path: build/windows/runner/Release/*.exe
 
       # Upload Linux app as a build artifact
-      - uses: actions/upload-artifact@v2
-        with:
-          name: linux-release-app
-          path: build/linux/x64/release/bundle/*
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: linux-release-app
+      #     path: build/linux/x64/release/bundle/*
