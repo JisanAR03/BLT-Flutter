@@ -23,7 +23,6 @@ jobs:
       - name: Clean the build environment
         run: flutter clean
 
-      # Run flutter pub get to generate necessary files
       - name: Get Flutter dependencies
         run: flutter pub get
 
@@ -32,9 +31,14 @@ jobs:
           cd macos
           pod install
 
-      - name: Disable Code Signing (for debugging)
+      # Check if CODE_SIGN_IDENTITY exists and set it if it does
+      - name: Disable Code Signing (conditionally)
         run: |
-          sudo /usr/libexec/PlistBuddy -c "Set :CODE_SIGN_IDENTITY ''" macos/Runner.xcodeproj/project.pbxproj
+          if /usr/libexec/PlistBuddy -c "Print :CODE_SIGN_IDENTITY" macos/Runner.xcodeproj/project.pbxproj > /dev/null 2>&1; then
+            sudo /usr/libexec/PlistBuddy -c "Set :CODE_SIGN_IDENTITY ''" macos/Runner.xcodeproj/project.pbxproj;
+          else
+            echo "CODE_SIGN_IDENTITY not set, skipping.";
+          fi
 
       - name: Build macOS application with verbose logging
         run: flutter build macos --verbose
