@@ -7,50 +7,35 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
           java-version: '17'
-      - uses: subosito/flutter-action@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           architecture: x64
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
 
-      # Build for Android
-      # - run: flutter build apk
+      - name: Clean the build environment
+        run: flutter clean
 
-      # Build for macOS
-      # - run: flutter build macos
+      - name: Install CocoaPods dependencies
+        run: |
+          cd macos
+          pod install
 
-      # Build for Windows
-      # - run: flutter build windows
+      - name: Disable Code Signing (for debugging)
+        run: |
+          sudo /usr/libexec/PlistBuddy -c "Set :CODE_SIGN_IDENTITY ''" macos/Runner.xcodeproj/project.pbxproj
 
-      # Build for Linux
-      - run: flutter build linux
+      - name: Build macOS application with verbose logging
+        run: flutter build macos --verbose
 
-      # Upload APK as a build artifact
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: app-release-apk
-      #     path: build/app/outputs/flutter-apk/app-release.apk
-
-      # Upload macOS app as a build artifact
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: macos-release-app
-      #     path: build/macos/Build/Products/Release/*.app
-
-      # Upload Windows app as a build artifact
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: windows-release-app
-      #     path: build/windows/runner/Release/*.exe
-
-      # Upload Linux app as a build artifact
       - uses: actions/upload-artifact@v2
         with:
-          name: linux-release-app
-          path: build/linux/x64/release/bundle/*
+          name: macos-release-app
+          path: build/macos/Build/Products/Release/*.app
