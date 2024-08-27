@@ -23,6 +23,10 @@ jobs:
       - name: Clean the build environment
         run: flutter clean
 
+      # Run flutter pub get to generate necessary files
+      - name: Get Flutter dependencies
+        run: flutter pub get
+
       - name: Install CocoaPods dependencies
         run: |
           cd macos
