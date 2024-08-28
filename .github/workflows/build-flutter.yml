@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -20,15 +20,17 @@ jobs:
       - name: Get Flutter dependencies
         run: flutter pub get
 
-      - name: Install Linux dependencies
+      - name: Install Windows dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev clang cmake ninja-build pkg-config liblzma-dev libnotify-dev
+          choco install -y visualstudio2019buildtools
+          choco install -y visualstudio2019-workload-vctools
+          choco install -y cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+          choco install -y ninja
 
-      - name: Build Linux application with verbose logging
-        run: flutter build linux --verbose
+      - name: Build Windows application with verbose logging
+        run: flutter build windows --verbose
 
       - uses: actions/upload-artifact@v2
         with:
-          name: linux-release-app
-          path: build/linux/x64/release/bundle/*
+          name: windows-release-app
+          path: build/windows/runner/Release/*.exe
