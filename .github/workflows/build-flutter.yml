@@ -33,4 +33,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: windows-release-app
-          path: build/windows/runner/Release/*.exe
+          path: build/windows/x64/runner/Release/*.exe
