@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -26,24 +26,15 @@ jobs:
       - name: Get Flutter dependencies
         run: flutter pub get
 
-      - name: Install CocoaPods dependencies
+      - name: Install Linux dependencies
         run: |
-          cd macos
-          pod install
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev clang cmake ninja-build pkg-config liblzma-dev
 
-      # Check if CODE_SIGN_IDENTITY exists and set it if it does
-      - name: Disable Code Signing (conditionally)
-        run: |
-          if /usr/libexec/PlistBuddy -c "Print :CODE_SIGN_IDENTITY" macos/Runner.xcodeproj/project.pbxproj > /dev/null 2>&1; then
-            sudo /usr/libexec/PlistBuddy -c "Set :CODE_SIGN_IDENTITY ''" macos/Runner.xcodeproj/project.pbxproj;
-          else
-            echo "CODE_SIGN_IDENTITY not set, skipping.";
-          fi
-
-      - name: Build macOS application with verbose logging
-        run: flutter build macos --verbose
+      - name: Build Linux application with verbose logging
+        run: flutter build linux --verbose
 
       - uses: actions/upload-artifact@v2
         with:
-          name: macos-release-app
-          path: build/macos/Build/Products/Release/*.app
+          name: linux-release-app
+          path: build/linux/x64/release/bundle/*
